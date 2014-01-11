@@ -24,6 +24,10 @@ class FicusConfigSpec extends FunSpec {
       config.as[Int]("int.value") should be (10)
       config.as[List[String]]("strings") should contain theSameElementsInOrderAs Array("foo", "bar", "hoge")
 
+      // Optionが使用できるため、存在しない項目に対しても安全
+      an [com.typesafe.config.ConfigException$Missing] should be thrownBy config.as[String]("missing.entry")
+      config.as[Option[String]]("missing.entry") should be (None)
+
       // Setとして受け取ることも可能
       config.as[Set[String]]("strings") should contain only ("foo", "bar", "hoge")
     }
